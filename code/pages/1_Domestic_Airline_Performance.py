@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 from ipywidgets import widgets
 from IPython.display import display
-st.set_page_config(page_title="Domestic Airline Performance", page_icon="📈")
+st.set_page_config(page_title="Domestic Airline Performance", page_icon='📈')
 st.write("# Domestic Airline Performance 📈")
 df = pd.read_csv('code/pages/new.csv')
 tab0,tab1, tab2 = st.tabs(["home","1", "2"])
