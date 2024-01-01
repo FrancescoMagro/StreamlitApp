@@ -8,9 +8,14 @@ from IPython.display import display
 
 st.set_page_config(page_title="Domestic Airline Performance", page_icon='📈')
 st.title("Domestic Airline Performance 📈")
-
-df = pd.read_csv('code/pages/csv/yearly_on_time_performance.csv')
-overalldf = pd.read_csv('code/pages/csv/yearlyoverall.csv')
+try:
+    df = pd.read_csv('code/pages/csv/yearly_on_time_performance.csv')
+except:
+    df = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/yearly_on_time_performance.csv')
+try:
+    overalldf = pd.read_csv('code/pages/csv/yearlyoverall.csv')
+except:
+    overalldf = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/yearlyoverall.csv')
 tab0,tab1, tab2 = st.tabs(["Home", "Top 5 US Airlines", "Worst 5 US Airlines"])
 
 sorted_years = sorted(df['year'].unique())
@@ -76,14 +81,16 @@ with tab0:
                      inplace = True)
         fig1 = px.bar(filtered_df, x='year', y='sumofyearlydelayeddeapartureminutes', color='airlinename',barmode='group',text_auto='.2s',
                      title=f'Yearly Departure Delay').update_layout(xaxis_title='Year', yaxis_title= 'Departure delay in Min')
-        st.write("Test")
         st.plotly_chart(figure_or_data=fig1)
         filtered_df = df[(df['year'].isin(year_dropdown)) & (df['airlinename'].isin(airline_name))]
         filtered_df.sort_values(by='sumofyearlydelayedsarrivalminutes', axis=0,  # for column sorting
                                 ascending=False,
                                 inplace=True)
         fig = px.bar(filtered_df, x='year', y='sumofyearlydelayedsarrivalminutes', color='airlinename',barmode='group',text_auto='.2s',
-                     title=f'Yearly Arrival').update_layout(xaxis_title='Year', yaxis_title= 'Arrival delay in Min')
+                     title=f'Yearly Arrival Delay').update_layout(xaxis_title='Year', yaxis_title= 'Arrival delay in Min')
+        st.plotly_chart(figure_or_data=fig)
+    with st.container():
+        fig = px.scatter(filtered_df, x='ontimeperformancedeparture', y="ontimeperformancearrival", color='airlinename').update_layout(xaxis_title='Percentage of on time arrival', yaxis_title= 'Percentage of on time departure')
         st.plotly_chart(figure_or_data=fig)
 
 
@@ -95,19 +102,25 @@ with tab1:
 
 
     ).reset_index()
+
     average_on_time_performance['average_overall_performance'] = average_on_time_performance[
         ['average_departure_performance', 'average_arrival_performance']].mean(axis=1)
+    fil_df2 = df[(df['year'].isin(year_dropdown))]
+    average_on_time_performance_perc = fil_df2.groupby('airlinename').agg(
+        average_departure_performance_perc=pd.NamedAgg(column='ontimeperformancedeparture', aggfunc='mean'),
+        average_arrival_performance_perc=pd.NamedAgg(column='ontimeperformancearrival', aggfunc='mean'),
 
-    #average_on_time_performance['average_overall_performance_perc'] = average_on_time_performance[
-    #    ['average_departure_performance_perc', 'average_arrival_performance_perc']].mean(axis=1)
-    #best_performing_airline = average_on_time_performance.sort_values(by='average_overall_performance_perc',
-    #                                                                 ascending=False).iloc[:5]
+    ).reset_index()
+    average_on_time_performance_perc['average_overall_performance_perc'] = average_on_time_performance_perc[
+        ['average_departure_performance_perc', 'average_arrival_performance_perc']].mean(axis=1)
+    best_performing_airline = average_on_time_performance_perc.sort_values(by='average_overall_performance_perc',
+                                                                     ascending=False).iloc[:5]
 
-    #fig= px.bar(best_performing_airline, x='airlinename', y='average_overall_performance_perc',
-    #                text_auto='.4s', title='Top 5 Airlines based on Percentage',color='airlinename').update_layout( yaxis_title= 'Mean Performance in percentage')
-    #st.plotly_chart(figure_or_data=fig)
-    #with st.expander("See The List"):
-    #    best_performing_airline
+    fig1= px.bar(best_performing_airline, x='airlinename', y='average_overall_performance_perc',
+                    text_auto='.4s', title='Top 5 Airlines based on Percentage',color='airlinename').update_layout( yaxis_title= 'Mean Performance in percentage')
+    st.plotly_chart(figure_or_data=fig1)
+    with st.expander("See The List"):
+        best_performing_airline
 
     best_performing_airline_min = average_on_time_performance.sort_values(by='average_overall_performance',
                                                                       ascending=True).iloc[:5]
@@ -127,16 +140,25 @@ with tab2:
     ).reset_index()
     average_on_time_performance['average_overall_performance'] = average_on_time_performance[
         ['average_departure_performance', 'average_arrival_performance']].mean(axis=1)
-    #average_on_time_performance['average_overall_performance_perc'] = average_on_time_performance[
-    #    ['average_departure_performance_perc', 'average_arrival_performance_perc']].mean(axis=1)
-    #best_performing_airline = average_on_time_performance.sort_values(by='average_overall_performance_perc',
-    #                                                                 ascending=True).iloc[:5]
 
-    #fig= px.bar(best_performing_airline, x='airlinename', y='average_overall_performance_perc',
-    #                text_auto='.4s', color='airlinename', title='Worst 5 Airlines based on Percentage').update_layout( yaxis_title= 'Mean Performance in percentage')
-    #st.plotly_chart(figure_or_data=fig)
-    #with st.expander("See The List"):
-    #    best_performing_airline
+    fil_df2 = df[(df['year'].isin(year_dropdown))]
+    average_on_time_performance_perc = fil_df2.groupby('airlinename').agg(
+        average_departure_performance_perc=pd.NamedAgg(column='ontimeperformancedeparture', aggfunc='mean'),
+        average_arrival_performance_perc=pd.NamedAgg(column='ontimeperformancearrival', aggfunc='mean'),
+
+    ).reset_index()
+    average_on_time_performance_perc['average_overall_performance_perc'] = average_on_time_performance_perc[
+        ['average_departure_performance_perc', 'average_arrival_performance_perc']].mean(axis=1)
+    best_performing_airline = average_on_time_performance_perc.sort_values(by='average_overall_performance_perc',
+                                                                           ascending=True).iloc[:5]
+
+    fig1 = px.bar(best_performing_airline, x='airlinename', y='average_overall_performance_perc',
+                  text_auto='.4s', title='Top 5 Airlines based on Percentage', color='airlinename').update_layout(
+        yaxis_title='Mean Performance in percentage')
+    st.plotly_chart(figure_or_data=fig1)
+    with st.expander("See The List"):
+        best_performing_airline
+
     best_performing_airline_min = average_on_time_performance.sort_values(by='average_overall_performance',
                                                                       ascending=False).iloc[:5]
 
