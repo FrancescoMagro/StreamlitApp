@@ -59,4 +59,4 @@ for _, row in df.iterrows():
 
 # Streamlit app
 st.title('Flight Routes Map')
-st_folium(m, width=700, height=500)
+st_folium(m)
