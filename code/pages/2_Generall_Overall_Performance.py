@@ -25,38 +25,30 @@ data = {
     "destination_lat": [37.6196, 33.9382, 41.9875, 38.8472, 33.9382, 36.0719, 33.4277, 28.4183],
     "destination_lng": [-122.3656, -118.3865, -87.9319, -77.0345, -118.3865, -115.1634, -112.0038, -81.3241]
 }
+
 df = pd.DataFrame(data)
 
-# Create a Map centered around the average latitude and longitude
-m = folium.Map(location=[df["origin_lat"].mean(), df["origin_lng"].mean()], zoom_start=4)
+# Fixed set of colors for the routes
+colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#800000', '#008000', '#000080', '#808000']
 
-# Adding routes with different colors and markers to the map
-for _, row in df.iterrows():
-    color = random_color_generator()  # Generate a random color for each route
+@st.cache(allow_output_mutation=True)
+def create_map():
+    m = folium.Map(location=[df["origin_lat"].mean(), df["origin_lng"].mean()], zoom_start=4)
 
-    # Origin and Destination coordinates
-    origin = [row["origin_lat"], row["origin_lng"]]
-    destination = [row["destination_lat"], row["destination_lng"]]
-    route_name = f"{row['origin']} to {row['destination']}"
+    for index, row in df.iterrows():
+        color = colors[index % len(colors)]  # Use a fixed color from the list
 
-    # Draw the flight route with a popup
-    folium.PolyLine(
-        [origin, destination], color=color, weight=2.5, opacity=1,
-        popup=route_name
-    ).add_to(m)
+        origin = [row["origin_lat"], row["origin_lng"]]
+        destination = [row["destination_lat"], row["destination_lng"]]
+        route_name = f"{row['origin']} to {row['destination']}"
 
-    # Add markers for Origin and Destination with a popup
-    folium.CircleMarker(
-        location=origin, radius=5, color=color, fill=True,
-        fill_color=color, popup=f"Origin: {row['origin']}"
-    ).add_to(m)
-    folium.CircleMarker(
-        location=destination, radius=5, color=color, fill=True,
-        fill_color=color, popup=f"Destination: {row['destination']}"
-    ).add_to(m)
+        folium.PolyLine([origin, destination], color=color, weight=2.5, opacity=1, popup=route_name).add_to(m)
+        folium.CircleMarker(location=origin, radius=5, color=color, fill=True, fill_color=color, popup=f"Origin: {row['origin']}").add_to(m)
+        folium.CircleMarker(location=destination, radius=5, color=color, fill=True, fill_color=color, popup=f"Destination: {row['destination']}").add_to(m)
 
-# Display the map
+    return m
 
 # Streamlit app
 st.title('Flight Routes Map')
-st_folium(m)
+map_object = create_map()
+st_folium(map_object)
