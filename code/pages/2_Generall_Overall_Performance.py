@@ -7,7 +7,7 @@ from ipywidgets import widgets
 from IPython.display import display
 import folium
 from streamlit_folium import st_folium
-import random
+
 
 
 def random_color_generator():
