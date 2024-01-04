@@ -51,4 +51,4 @@ def create_map():
 # Streamlit app
 st.title('Flight Routes Map')
 map_object = create_map()
-st_folium(map_object)
+st_folium(map_object, height=700, width=800)
