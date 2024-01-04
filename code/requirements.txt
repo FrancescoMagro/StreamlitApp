@@ -5,3 +5,5 @@ plotly
 ipywidgets
 IPython
 streamlit_elements
+streamlit-folium
+random
