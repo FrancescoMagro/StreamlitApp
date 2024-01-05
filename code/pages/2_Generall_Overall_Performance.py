@@ -8,6 +8,7 @@ from IPython.display import display
 import folium
 from streamlit_folium import st_folium
 import random
+import pydeck as pdk
 
 def large_number_to_readable_format(number):
 
@@ -40,19 +41,50 @@ filter_df = df[df['year'] == years]
 print(filter_df)
 
 colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#800000', '#008000', '#000080', '#808000']
-
-m = folium.Map(location=[filter_df["origin_lat"].mean(), filter_df["origin_lng"].mean()], zoom_start=4)
-
+layer_data = []
 for index, row in filter_df.iterrows():
     color = colors[index % len(colors)]
+    color = color.lstrip('#')
+    layer_data.append({
+        "origin": [row["origin_lng"], row["origin_lat"]],
+        "destination": [row["destination_lng"], row["destination_lat"]],
+        "tooltip": f"{row['origin']} to {row['destination']}",
+        "color":  tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
+    })
 
-    origin = [row["origin_lat"], row["origin_lng"]]
-    destination = [row["destination_lat"], row["destination_lng"]]
-    route_name = f"{row['origin']} to {row['destination']} Amount of times: {row['total']}"
+layer = pdk.Layer(
+    type="LineLayer",
+    data=layer_data,
+    get_source_position="origin",
+    get_target_position="destination",
+    get_color="color",
+    get_width=5,
+    pickable=True
+)
+layer1=pdk.Layer(
+'ScatterplotLayer',
+data = layer_data,
+get_position = 'origin',
+get_color = '[0, 0, 0]',
+get_radius = 60000,
+)
 
-    folium.PolyLine([origin, destination], color=color, weight=4, opacity=1, tooltip=route_name).add_to(m)
-    folium.Marker(location=origin, radius=5, color=color, fill=True, fill_color=color, tooltip=f"Origin: {row['origin']}").add_to(m)
-    folium.Marker(location=destination, radius=5, color=color, fill=True, fill_color=color, tooltip=f"Destination: {row['destination']}").add_to(m)
+layer2=pdk.Layer(
+'ScatterplotLayer',
+data = layer_data,
+get_position = 'destination',
+get_color = '[0, 0, 0]',
+get_radius = 60000,
+)
+view_state = pdk.ViewState(
+    latitude=filter_df["origin_lat"].mean(),
+    longitude=filter_df["destination_lng"].mean(),
+    zoom=3,
+    pitch=50,
+)
+
+
+
 
 st.write(f'Flight Routes Map {years}')
 with st.expander("List of the Top 10 Trips"):
@@ -72,4 +104,4 @@ with st.expander("List of the Top 10 Trips"):
             st.color_picker('', color, disabled=True)
 
 
-st_folium(m, height=500, width=900)
+st.pydeck_chart(pdk.Deck(map_style='mapbox://styles/mapbox/light-v9',layers=[layer,layer1,layer2], initial_view_state=view_state, tooltip={"text": "{tooltip}"}))
