@@ -6,3 +6,4 @@ ipywidgets
 IPython
 streamlit_elements
 streamlit-folium
+pydeck
