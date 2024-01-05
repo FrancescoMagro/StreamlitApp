@@ -33,7 +33,8 @@ st.pydeck_chart(pdk.Deck(
          longitude=filtered_df['locationlng'].mean(),
          zoom=3,
          pitch=50,
-     ),tooltip=filtered_df['numberofevents'],
+        tooltip=filtered_df['numberofevents']
+     )
      layers=[
          pdk.Layer(
             'ScatterplotLayer',
