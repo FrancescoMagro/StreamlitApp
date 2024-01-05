@@ -28,7 +28,6 @@ else:
 filtered_df = filtered_df[filtered_df['weathertype'] == selected_weather]
 st.pydeck_chart(pdk.Deck(
      map_style='mapbox://styles/mapbox/light-v9',
-    tooltip=filtered_df['numberofevents'],
      initial_view_state=pdk.ViewState(
          latitude=filtered_df['locationlat'].mean(),
          longitude=filtered_df['locationlng'].mean(),
