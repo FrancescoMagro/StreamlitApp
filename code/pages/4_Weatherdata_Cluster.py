@@ -43,5 +43,5 @@ st.pydeck_chart(pdk.Deck(
             get_radius='numberofevents * 1000',
          ),
      ],
-    tooltip=filtered_df['numberofevents']
- ))
+
+ ),tooltip=filtered_df['numberofevents'])
