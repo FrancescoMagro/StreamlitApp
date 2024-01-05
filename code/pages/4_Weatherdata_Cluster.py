@@ -9,7 +9,7 @@ weather_types = ['Rain', 'Snow', 'Fog', 'Hail', 'Cold', 'Storm']
 
 
 selected_weather = st.selectbox('Select weather type', weather_types)
-file_name = '/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/' + f'{selected_weather.lower()}.csv'
+file_name = 'code/pages/csv/' + f'{selected_weather.lower()}.csv'
 df = pd.read_csv(file_name)
 
 st.title('Airport Rain Event Visualization')
