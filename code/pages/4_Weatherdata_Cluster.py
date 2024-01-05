@@ -12,7 +12,7 @@ selected_weather = st.selectbox('Select weather type', weather_types)
 file_name = 'code/pages/csv/weath.csv'
 df = pd.read_csv(file_name)
 
-st.title('Airport Rain Event Visualization')
+st.title(f'Airport {selected_weather} Event Visualization')
 
 selected_month = st.slider('Select a month', 1, 12)
 
