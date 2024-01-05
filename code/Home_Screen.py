@@ -9,5 +9,5 @@ st.header("Welcome To Our Database Analysis Project")
 st.subheader("Influence of the Weather on the US Air Traffic and Worst Performing Domestic Airline")
 st.caption("Besche Awdir & Francesco Magro (Group-13)")
 st.image('code/pages/image/imageHome.png')
-st.sidebar.success("Select an Analysis above.")
+st.sidebar.info("Select an Analysis above.")
 
