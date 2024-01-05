@@ -67,5 +67,9 @@ with st.expander("List of the Top 10 Trips"):
             st.metric(label="Destination", value=row['destination'])
         with col3:
             st.metric(label="Amount of flights", value=large_number_to_readable_format(row['total']))
+        with col5:
+            st.write("")
+            st.color_picker('', color, disabled=True)
+
 
 st_folium(m, height=500, width=900)
