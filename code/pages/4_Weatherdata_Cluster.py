@@ -9,7 +9,7 @@ weather_types = ['Rain', 'Snow', 'Fog', 'Hail', 'Cold', 'Storm']
 
 
 selected_weather = st.selectbox('Select weather type', weather_types)
-file_name = 'code/pages/csv/' + f'{selected_weather.lower()}.csv'
+file_name = 'code/pages/csv/weath.csv'
 df = pd.read_csv(file_name)
 
 st.title('Airport Rain Event Visualization')
@@ -25,7 +25,7 @@ if selected_airport != 'All Airports':
     filtered_df = df[(df['month'] == selected_month) & (df['year'] == selected_year) & (df['airportcode'] == selected_airport)]
 else:
     filtered_df = df[(df['month'] == selected_month) & (df['year'] == selected_year)]
-
+filtered_df = filtered_df[filtered_df['weathertype'] == selected_weather]
 st.pydeck_chart(pdk.Deck(
      map_style='mapbox://styles/mapbox/light-v9',
      initial_view_state=pdk.ViewState(
