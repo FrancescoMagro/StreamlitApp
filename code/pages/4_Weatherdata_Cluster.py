@@ -34,7 +34,7 @@ st.pydeck_chart(pdk.Deck(
          zoom=3,
          pitch=50,
         tooltip=filtered_df['numberofevents']
-     )
+     ),
      layers=[
          pdk.Layer(
             'ScatterplotLayer',
@@ -43,6 +43,6 @@ st.pydeck_chart(pdk.Deck(
             get_color='[200, 30, 0, 160]',
             get_radius='numberofevents * 1000',
          ),
-     ],
+     ]
 
  ))
