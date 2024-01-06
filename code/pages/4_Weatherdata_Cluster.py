@@ -25,7 +25,8 @@ if selected_airport != 'All Airports':
     filtered_df = df[(df['month'] == selected_month) & (df['year'] == selected_year) & (df['airportcode'] == selected_airport)]
 else:
     filtered_df = df[(df['month'] == selected_month) & (df['year'] == selected_year)]
-filtered_df = filtered_df[filtered_df['weathertype'] == selected_weather]
+filtered_df2 = filtered_df[filtered_df['weathertype'] == selected_weather]
+
 st.pydeck_chart(pdk.Deck(
      map_style='mapbox://styles/mapbox/light-v9',
      initial_view_state=pdk.ViewState(
@@ -37,7 +38,7 @@ st.pydeck_chart(pdk.Deck(
      layers=[
          pdk.Layer(
             'ScatterplotLayer',
-            data=filtered_df,
+            data=filtered_df2,
             get_position='[locationlng, locationlat]',
             get_color='[200, 30, 0, 160]',
             get_radius='numberofevents * 1000',
