@@ -84,17 +84,14 @@ sorted_airport_code = sorted(df2['destination'].unique())
 all_selected_airports = ['All Airports']+ sorted_airport_code
 sorted_arrival_severity = sorted(df2['destination_severity'].unique())
 
-if selected_airport != 'All Airports':
-    print(selected_airport)
-    filtered_df = filtered_df[filtered_df['airportcode'] == selected_airport]
+#if selected_airport != 'All Airports':
+#    print(selected_airport)
+#    filtered_df = filtered_df[filtered_df['airportcode'] == selected_airport]
 
 
 
+#filtered_df = df[df['starttime'].dt.year==selected_year]
 
-filtered_df = df[df['starttime'].dt.year==selected_year]
-fig1 = px.line(filtered_df, x='starttime', y='amount_of_events', title=f'Events per Year for {selected_airport} ').update_layout(
-    yaxis_title='Events Per Year', xaxis_title='Event Date')
-st.plotly_chart(figure_or_data=fig1)
 
 selected_air = st.selectbox('Select a Airport', all_selected_airports)
 selected_severity = st.selectbox('Select the Severity', sorted_arrival_severity)
@@ -129,7 +126,7 @@ else:
 filtered_df2 = filtered_df2[filtered_df2['origin_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'], name="Delay Origin" ).update_layout(
+fig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'], name="Departure Origin" ).update_layout(
     yaxis_title='Delay in Minutes', xaxis_title ='Flight Date')
 st.plotly_chart(figure_or_data=fig2)
 
