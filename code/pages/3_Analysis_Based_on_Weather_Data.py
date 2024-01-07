@@ -36,7 +36,7 @@ if selected_airport != 'All Airports':
 else:
     filtered_df = df[(df['month'] == selected_month) & (df['year'] == selected_year)]
 filtered_df2 = filtered_df[filtered_df['weathertype'] == selected_weather]
-
+sum_of_events=np.sum(filtered_df2['numberofevents'])
 st.pydeck_chart(pdk.Deck(
      map_style='mapbox://styles/mapbox/light-v9',
      initial_view_state=pdk.ViewState(
@@ -56,6 +56,8 @@ st.pydeck_chart(pdk.Deck(
      ]
 
  ))
+
+st.subheader(f'Number of {selected_weather} Events: {sum_of_events}')
 try:
     df = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/WeatherData.csv')
     df2 = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/arrivalWeatherDelay.csv')
@@ -79,6 +81,7 @@ df['starttime'] = pd.to_datetime(df['starttime'])
 df2['flightdate'] = pd.to_datetime(df2['flightdate'])
 
 sorted_airport_code = sorted(df2['destination'].unique())
+all_selected_airports = ['All Airports']+ sorted_airport_code
 sorted_arrival_severity = sorted(df2['destination_severity'].unique())
 
 if selected_airport != 'All Airports':
@@ -93,36 +96,38 @@ fig1 = px.line(filtered_df, x='starttime', y='amount_of_events', title=f'Events 
     yaxis_title='Events Per Year', xaxis_title='Event Date')
 st.plotly_chart(figure_or_data=fig1)
 
-selected_air = st.selectbox('Select a Destination Airport', sorted_airport_code)
+selected_air = st.selectbox('Select a Airport', all_selected_airports)
 selected_severity = st.selectbox('Select the Severity', sorted_arrival_severity)
-
 filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['destination_weather']==selected_weather)]
-filtered_df2 = filtered_df2[(filtered_df2['destination'] == selected_air)]
+if selected_air == 'All Airports':
+    selected_air = sorted_airport_code
+    filtered_df2 = filtered_df2[(filtered_df2['destination'].isin(selected_air))]
+else:
+    filtered_df2 = filtered_df2[(filtered_df2['destination']==selected_air)]
+
 filtered_df2 = filtered_df2[filtered_df2['destination_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig2 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Destination Airport per Year: {selected_air} ').update_layout(
+fig2 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes  Origin/Destination in  {selected_year}').update_layout(
     yaxis_title='Flight Date')
 
-st.plotly_chart(figure_or_data=fig2)
 try:
     df2 = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/DepartureWeatherDelay.csv')
 except:
     df2 = pd.read_csv('code/pages/csv/DepartureWeatherDelay.csv')
 
 df2['flightdate'] = pd.to_datetime(df2['flightdate'])
-sorted_airport_code = sorted(df2['origin'].unique())
-sorted_arrival_severity =df2['origin_severity'].unique()
-severity= list(filter(lambda x: x == x, sorted_arrival_severity))
-selected_air = st.selectbox('Select a Origin Airport', sorted_airport_code)
-selected_severity = st.selectbox('Select the Severity', severity)
 
 filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['origin_weather']==selected_weather)]
-filtered_df2 = filtered_df2[(filtered_df2['origin'] == selected_air)]
+if selected_air == 'All Airports':
+    selected_air = sorted_airport_code
+    filtered_df2 = filtered_df2[(filtered_df2['origin'].isin(selected_air))]
+else:
+    filtered_df2 = filtered_df2[(filtered_df2['origin']==selected_air)]
 filtered_df2 = filtered_df2[filtered_df2['origin_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig3 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Origin Airport per Year: {selected_air} ').update_layout(
+fig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'], name="Delay Origin" ).update_layout(
     yaxis_title='Delay in Minutes', xaxis_title ='Flight Date')
+st.plotly_chart(figure_or_data=fig2)
 
-st.plotly_chart(figure_or_data=fig3)
