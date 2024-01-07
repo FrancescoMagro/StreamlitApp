@@ -6,8 +6,8 @@ import plotly.graph_objects as go
 from ipywidgets import widgets
 from IPython.display import display
 import pydeck as pdk
-st.set_page_config(page_title="Domestic Airline Performance", page_icon='📈')
-st.write("# Wheater Analysis📈")
+st.set_page_config(page_title="Analysis Based on Weather Data", page_icon='📈')
+st.title("Analysis Based on Weather Data📈")
 
 
 weather_types = ['Rain', 'Snow', 'Fog', 'Hail', 'Cold', 'Storm']
@@ -22,7 +22,7 @@ except:
     df = pd.read_csv(file_name)
 
 
-st.title(f'Event Map Visualization for the Weather: {selected_weather}')
+st.subheader(f'Event Map Visualization for the Weather: {selected_weather}')
 
 selected_month = st.slider('Select a Month', 1, 12)
 
