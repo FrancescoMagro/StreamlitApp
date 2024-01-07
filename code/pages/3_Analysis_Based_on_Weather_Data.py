@@ -100,8 +100,8 @@ selected_air = st.selectbox('Select a Airport', all_selected_airports)
 selected_severity = st.selectbox('Select the Severity', sorted_arrival_severity)
 filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['destination_weather']==selected_weather)]
 if selected_air == 'All Airports':
-    selected_air = sorted_airport_code
-    filtered_df2 = filtered_df2[(filtered_df2['destination'].isin(selected_air))]
+    tmp_air = sorted_airport_code
+    filtered_df2 = filtered_df2[(filtered_df2['destination'].isin(tmp_air))]
 else:
     filtered_df2 = filtered_df2[(filtered_df2['destination']==selected_air)]
 
@@ -120,9 +120,11 @@ df2['flightdate'] = pd.to_datetime(df2['flightdate'])
 
 filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['origin_weather']==selected_weather)]
 if selected_air == 'All Airports':
-    selected_air = sorted_airport_code
-    filtered_df2 = filtered_df2[(filtered_df2['origin'].isin(selected_air))]
+    tmp_air = sorted_airport_code
+    filtered_df2 = filtered_df2[(filtered_df2['origin'].isin(tmp_air))]
+
 else:
+    print("test")
     filtered_df2 = filtered_df2[(filtered_df2['origin']==selected_air)]
 filtered_df2 = filtered_df2[filtered_df2['origin_severity'] == selected_severity]
 
