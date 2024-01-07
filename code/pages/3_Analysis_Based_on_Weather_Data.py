@@ -93,7 +93,7 @@ sorted_arrival_severity = sorted(df2['destination_severity'].unique())
 #filtered_df = df[df['starttime'].dt.year==selected_year]
 
 
-selected_air = st.selectbox('Select a Airport', all_selected_airports)
+selected_air = st.selectbox('Select an Airport', all_selected_airports)
 selected_severity = st.selectbox('Select the Severity', sorted_arrival_severity)
 filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['destination_weather']==selected_weather)]
 if selected_air == 'All Airports':

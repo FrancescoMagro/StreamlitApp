@@ -54,13 +54,6 @@ if all_options_air:
 with tab0:
 
 
-    if all_options and all_options_air:
-        st.write(f'Welcome to the Hompage you selected all years')
-    elif year_dropdown == [] and airline_name == []:
-        st.write(f'Welcome to the hompage please select the years and airlines in the sidebar')
-    else:
-        st.write(f'Welcome to the hompage this are your selected years {year_dropdown}')
-
     print(airline_name)
     with st.container():
         col1, col2, col3 = st.columns(3)
@@ -153,7 +146,7 @@ with tab2:
                                                                            ascending=True).iloc[:5]
 
     fig1 = px.bar(best_performing_airline, x='airlinename', y='average_overall_performance_perc',
-                  text_auto='.4s', title='Top 5 Airlines based on Percentage', color='airlinename').update_layout(
+                  text_auto='.4s', title='Worst 5 Airlines based on Percentage', color='airlinename').update_layout(
         yaxis_title='Mean Performance in percentage')
     st.plotly_chart(figure_or_data=fig1)
     with st.expander("See The List"):
