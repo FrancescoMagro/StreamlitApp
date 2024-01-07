@@ -101,7 +101,7 @@ filtered_df2 = filtered_df2[(filtered_df2['destination'] == selected_air)]
 filtered_df2 = filtered_df2[filtered_df2['destination_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig2 = px.bar(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Destination Airport per Year: {selected_air} ').update_layout(
+fig2 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Destination Airport per Year: {selected_air} ').update_layout(
     yaxis_title='Flight Date')
 
 st.plotly_chart(figure_or_data=fig2)
@@ -122,7 +122,7 @@ filtered_df2 = filtered_df2[(filtered_df2['origin'] == selected_air)]
 filtered_df2 = filtered_df2[filtered_df2['origin_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig3 = px.bar(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Origin Airport per Year: {selected_air} ').update_layout(
+fig3 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes and Origin Airport per Year: {selected_air} ').update_layout(
     yaxis_title='Delay in Minutes', xaxis_title ='Flight Date')
 
 st.plotly_chart(figure_or_data=fig3)
