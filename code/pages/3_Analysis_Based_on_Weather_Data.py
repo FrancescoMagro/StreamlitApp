@@ -134,15 +134,15 @@ number_of_events2 = number_of_events2.reset_index(name='count')
 print(number_of_events.head)
 #number_of_events['Count'] = number_of_events['Count']+number_of_events2['Count']
 
-subfig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'],  name="Sum of Delay at Destination" ,marker=dict(color="MediumPurple"))
-subfig2.add_scatter(x=filtered_df3['flightdate'], y=filtered_df3['sum'],  name="Sum of Delay at Origin")
-subfig2.add_scatter(x=number_of_events['flightdate'], y=number_of_events['count'], yaxis="y2", name="Amount of Events at Destination")
-subfig2.add_scatter(x=number_of_events2['flightdate'], y=number_of_events2['count'], yaxis="y2", name="Amount of Events at Origin")
+subfig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'],  name="Sum of Delay at Arrival" ,marker=dict(color="MediumPurple"))
+subfig2.add_scatter(x=filtered_df3['flightdate'], y=filtered_df3['sum'],  name="Sum of Delay at Departure")
+subfig2.add_scatter(x=number_of_events['flightdate'], y=number_of_events['count'], yaxis="y2", name="Amount of Events at Arrival")
+subfig2.add_scatter(x=number_of_events2['flightdate'], y=number_of_events2['count'], yaxis="y2", name="Amount of Events at Departure")
 
 subfig2.layout.xaxis.title="Flight Date"
 subfig2.layout.yaxis.title="Delay in Minutes"
 subfig2.layout.yaxis2.title="Amount of events"
-subfig2.layout.title = f'Delay in Minutes Origin/Destination in: {selected_year}'
+subfig2.layout.title = f'Delay in Minutes Arrival/Departure in: {selected_year}'
 
 
 st.plotly_chart(figure_or_data=subfig2)
