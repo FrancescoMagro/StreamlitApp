@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from plotly.subplots import make_subplots
 import numpy as np
+
 import plotly.graph_objects as go
 from ipywidgets import widgets
 from IPython.display import display
@@ -105,8 +107,8 @@ else:
 filtered_df2 = filtered_df2[filtered_df2['destination_severity'] == selected_severity]
 
 print(filtered_df2.head())
-fig2 = px.line(filtered_df2, x='flightdate', y='sum', title=f'Delay in Minutes  Origin/Destination in  {selected_year}').update_layout(
-    yaxis_title='Flight Date')
+subfig2 = make_subplots(specs=[[{"secondary_y": True}]])
+fig2 = px.line(filtered_df2, x='flightdate', y='sum')
 
 try:
     df2 = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/DepartureWeatherDelay.csv')
@@ -115,18 +117,33 @@ except:
 
 df2['flightdate'] = pd.to_datetime(df2['flightdate'])
 
-filtered_df2 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['origin_weather']==selected_weather)]
+filtered_df3 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['origin_weather']==selected_weather)]
 if selected_air == 'All Airports':
     tmp_air = sorted_airport_code
-    filtered_df2 = filtered_df2[(filtered_df2['origin'].isin(tmp_air))]
+    filtered_df3 = filtered_df3[(filtered_df3['origin'].isin(tmp_air))]
 
 else:
     print("test")
-    filtered_df2 = filtered_df2[(filtered_df2['origin']==selected_air)]
-filtered_df2 = filtered_df2[filtered_df2['origin_severity'] == selected_severity]
+    filtered_df3 = filtered_df3[(filtered_df3['origin']==selected_air)]
+filtered_df3 = filtered_df3[filtered_df3['origin_severity'] == selected_severity]
+number_of_events = filtered_df2.groupby('flightdate').size()
+number_of_events2 = filtered_df3.groupby('flightdate').size()
 
-print(filtered_df2.head())
-fig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'], name="Departure Origin" ).update_layout(
-    yaxis_title='Delay in Minutes', xaxis_title ='Flight Date')
-st.plotly_chart(figure_or_data=fig2)
+number_of_events = number_of_events.reset_index(name='count')
+number_of_events2 = number_of_events2.reset_index(name='count')
+print(number_of_events.head)
+#number_of_events['Count'] = number_of_events['Count']+number_of_events2['Count']
+
+subfig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'],  name="Sum of Delay at Destination" ,marker=dict(color="MediumPurple"))
+subfig2.add_scatter(x=filtered_df3['flightdate'], y=filtered_df3['sum'],  name="Sum of Delay at Origin")
+subfig2.add_scatter(x=number_of_events['flightdate'], y=number_of_events['count'], yaxis="y2", name="Amount of Events at Destination")
+subfig2.add_scatter(x=number_of_events2['flightdate'], y=number_of_events2['count'], yaxis="y2", name="Amount of Events at Origin")
+
+subfig2.layout.xaxis.title="Flight Date"
+subfig2.layout.yaxis.title="Delay in Minutes"
+subfig2.layout.yaxis2.title="Amount of events"
+subfig2.layout.title = f'Delay in Minutes Origin/Destination in: {selected_year}'
+
+
+st.plotly_chart(figure_or_data=subfig2)
 
