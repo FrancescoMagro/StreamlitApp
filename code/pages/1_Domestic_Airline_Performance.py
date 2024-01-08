@@ -76,7 +76,7 @@ with tab0:
                      title=f'Yearly Departure Delay').update_layout(xaxis_title='Year', yaxis_title= 'Departure delay in Min')
         st.plotly_chart(figure_or_data=fig1)
         filtered_df = df[(df['year'].isin(year_dropdown)) & (df['airlinename'].isin(airline_name))]
-        filtered_df.sort_values(by='sumofyearlydelayedsarrivalminutes', axis=0,  # for column sorting
+        filtered_df.sort_values(by='sumofyearlydelayedsarrivalminutes', axis=0,
                                 ascending=False,
                                 inplace=True)
         fig = px.bar(filtered_df, x='year', y='sumofyearlydelayedsarrivalminutes', color='airlinename',barmode='group',text_auto='.2s',

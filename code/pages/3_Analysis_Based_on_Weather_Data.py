@@ -112,28 +112,34 @@ fig2 = px.line(filtered_df2, x='flightdate', y='sum')
 
 try:
     df2 = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/DepartureWeatherDelay.csv')
+    df3 = pd.read_csv('/Users/francescomagro/Desktop/Streamlit/StreamlitApp/code/pages/csv/generalDelayNoWeather.csv')
 except:
     df2 = pd.read_csv('code/pages/csv/DepartureWeatherDelay.csv')
+    df3 = pd.read_csv('code/pages/csv/generalDelayNoWeather.csv')
 
 df2['flightdate'] = pd.to_datetime(df2['flightdate'])
 
+
+filtered_df4 = df3[(df3['year']==selected_year)]
 filtered_df3 = df2[(df2['flightdate'].dt.year==selected_year)&(df2['origin_weather']==selected_weather)]
 if selected_air == 'All Airports':
     tmp_air = sorted_airport_code
     filtered_df3 = filtered_df3[(filtered_df3['origin'].isin(tmp_air))]
+    filtered_df4 = filtered_df4[(filtered_df4['origin'].isin(tmp_air))]
 
 else:
     print("test")
     filtered_df3 = filtered_df3[(filtered_df3['origin']==selected_air)]
+    filtered_df4 = filtered_df4[(filtered_df4['origin']==selected_air)]
+
 filtered_df3 = filtered_df3[filtered_df3['origin_severity'] == selected_severity]
 number_of_events = filtered_df2.groupby('flightdate').size()
 number_of_events2 = filtered_df3.groupby('flightdate').size()
 
 number_of_events = number_of_events.reset_index(name='count')
 number_of_events2 = number_of_events2.reset_index(name='count')
-print(number_of_events.head)
+print(filtered_df4.head())
 #number_of_events['Count'] = number_of_events['Count']+number_of_events2['Count']
-
 subfig2.add_scatter(x=filtered_df2['flightdate'], y=filtered_df2['sum'],  name="Sum of Delay at Arrival" ,marker=dict(color="MediumPurple"))
 subfig2.add_scatter(x=filtered_df3['flightdate'], y=filtered_df3['sum'],  name="Sum of Delay at Departure")
 subfig2.add_scatter(x=number_of_events['flightdate'], y=number_of_events['count'], yaxis="y2", name="Amount of Events at Arrival")
@@ -144,6 +150,7 @@ subfig2.layout.yaxis.title="Delay in Minutes"
 subfig2.layout.yaxis2.title="Amount of events"
 subfig2.layout.title = f'Delay in Minutes Arrival/Departure in: {selected_year}'
 
-
+fig4 = px.line(filtered_df4, x='month',y='sum', title="Amount of Events")
 st.plotly_chart(figure_or_data=subfig2)
+st.plotly_chart(figure_or_data=fig4)
 

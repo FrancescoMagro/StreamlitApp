@@ -11,6 +11,8 @@ import random
 import pydeck as pdk
 st.set_page_config(page_title="Most Frequent Trips", page_icon='📈')
 st.title("Most Frequent Trips Per Year📈")
+
+#Makes numbers more readable
 def large_number_to_readable_format(number):
 
     if number < 1000:
@@ -42,6 +44,7 @@ filter_df = df[df['year'] == years]
 print(filter_df)
 
 colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#800000', '#008000', '#000080', '#808000']
+#Creates the map layers
 layer_data = []
 for index, row in filter_df.iterrows():
     color = colors[index % len(colors)]
@@ -87,7 +90,7 @@ view_state = pdk.ViewState(
 
 
 
-
+#Used to create
 with st.expander("List of the Most frequent Trips"):
     col1,col2,col3, col5 = st.columns(4)
     for index, row in filter_df.iterrows():
